@@ -1,4 +1,4 @@
-package com.futesat.hexagonal.courses.infrastructure.persistence.h2;
+package com.futesat.hexagonal.courses.infrastructure.persistence.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

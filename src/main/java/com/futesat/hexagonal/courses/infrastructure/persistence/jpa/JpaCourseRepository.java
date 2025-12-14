@@ -1,4 +1,4 @@
-package com.futesat.hexagonal.courses.infrastructure.persistence.h2;
+package com.futesat.hexagonal.courses.infrastructure.persistence.jpa;
 
 import com.futesat.hexagonal.courses.domain.Course;
 import com.futesat.hexagonal.courses.domain.CourseId;
@@ -13,11 +13,11 @@ import java.util.Optional;
 // Marcamos este como el principal para que Spring lo elija si hay conflicto
 // (although we will inject it manually)
 // (aunque lo inyectaremos manualmente)
-public class H2CourseRepository implements CourseRepository {
+public class JpaCourseRepository implements CourseRepository {
 
     private final SpringDataCourseRepository jpaRepository;
 
-    public H2CourseRepository(SpringDataCourseRepository jpaRepository) {
+    public JpaCourseRepository(SpringDataCourseRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 

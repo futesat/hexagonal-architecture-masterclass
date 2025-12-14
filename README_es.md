@@ -272,7 +272,7 @@ La aplicación incluye un `Dockerfile` multi-stage optimizado.
 
 ### 15. Base de Datos Real (JPA + H2)
 Demostración de cambio de adaptador (Persistencia) sin afectar al dominio.
-- **Implementación**: `H2CourseRepository` usa `JpaRepository` y mapea la entidad `CourseEntity` (infraestructura) hacia `Course` (dominio).
+- **Implementación**: `JpaCourseRepository` usa `JpaRepository` y mapea la entidad `CourseEntity` (infraestructura) hacia `Course` (dominio).
 - **Consola H2**: Accesible en `http://localhost:8080/h2-console`
     - JDBC URL: `jdbc:h2:mem:testdb`
     - User: `sa`

@@ -86,7 +86,7 @@ Domain (Entities, Value Objects, Ports)
 Bounded Context principal que gestiona cursos.
 - **Dominio**: `Course`, `CourseId`, `CourseName`, `CourseCreatedEvent`
 - **Aplicación**: `CreateCourseCommand`, `FindCourseQuery`
-- **Infraestructura**: `CoursePostController`, `H2CourseRepository`
+- **Infraestructura**: `CoursePostController`, `JpaCourseRepository`
 
 ### `notifications`
 Bounded Context de notificaciones (ejemplo de desacoplamiento).
@@ -137,7 +137,7 @@ Kernel compartido entre módulos.
 
 ### Logs Importantes
 - **Eventos**: Buscar `WelcomeEmailSubscriber` en logs
-- **Persistencia**: Buscar `InMemoryCourseRepository` o `H2CourseRepository`
+- **Persistencia**: Buscar `InMemoryCourseRepository` o `JpaCourseRepository`
 - **Validación**: Buscar `GlobalExceptionHandler`
 
 ### Endpoints Útiles

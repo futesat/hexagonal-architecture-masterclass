@@ -1,4 +1,4 @@
-package com.futesat.hexagonal.courses.infrastructure.persistence.h2;
+package com.futesat.hexagonal.courses.infrastructure.persistence.jpa;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
