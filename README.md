@@ -5,7 +5,7 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[Leer en Español](README_es.md)
+> 🇪🇸 [Versión en Español](README_es.md)
 
 This project is a practical and didactic example designed to explain how to integrate advanced software engineering concepts into a Java application with Spring Boot.
 

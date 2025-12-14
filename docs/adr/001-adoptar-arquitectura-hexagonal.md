@@ -2,6 +2,8 @@
 
 Fecha: 2025-12-14
 
+> 🇬🇧 [English Version](001-adopt-hexagonal-architecture.md)
+
 ## Estado
 Aceptado
 
