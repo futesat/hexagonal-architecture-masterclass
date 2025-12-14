@@ -347,8 +347,8 @@ Para profundizar en estos conceptos, aquí tienes una selección de los mejores 
 
 ```bash
 # Ejecutar todos los tests
-Antes de Java 24: ./mvn test
-En Java 24: ./mvn test -Dnet.bytebuddy.experimental=true
+Antes de Java 24: ./mvnw test
+En Java 24: ./mvnw test -Dnet.bytebuddy.experimental=true
 ```
 
 Se ejecutan **15 tests** que validan desde la lógica pura del dominio hasta la integración de eventos y la propia arquitectura del código.
