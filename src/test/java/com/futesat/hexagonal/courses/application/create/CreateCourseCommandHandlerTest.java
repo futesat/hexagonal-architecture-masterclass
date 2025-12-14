@@ -41,12 +41,16 @@ public class CreateCourseCommandHandlerTest {
                 new CourseName(name),
                 duration);
 
+        // Verify save
         // Verificamos guardado
         verify(repository, times(1)).save(refEq(expectedCourse, "domainEvents"));
+        // We ignore "domainEvents" in comparison because calling create() twice
+        // will produce different event objects (different UUID/time).
         // Ignoramos "domainEvents" en la comparación porque al llamar a create() 2
         // veces,
         // tendrán objetos eventos distintos (distinto UUID/hora).
 
+        // Verify event publication
         // Verificamos publicación de eventos
         verify(eventBus, times(1)).publish(anyList());
     }

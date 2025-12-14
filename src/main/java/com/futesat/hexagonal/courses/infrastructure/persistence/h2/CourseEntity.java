@@ -13,6 +13,7 @@ public class CourseEntity {
     private String name;
     private String duration;
 
+    // Empty constructor required by JPA
     // Constructor vacío requerido por JPA
     public CourseEntity() {
     }

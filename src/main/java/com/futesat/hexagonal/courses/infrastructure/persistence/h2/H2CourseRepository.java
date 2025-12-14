@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-@Primary // Marcamos este como el principal para que Spring lo elija si hay conflicto
-         // (aunque lo inyectaremos manualmente)
+@Primary // We mark this as primary so Spring chooses it if there is a conflict
+// Marcamos este como el principal para que Spring lo elija si hay conflicto
+// (although we will inject it manually)
+// (aunque lo inyectaremos manualmente)
 public class H2CourseRepository implements CourseRepository {
 
     private final SpringDataCourseRepository jpaRepository;

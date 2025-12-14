@@ -10,12 +10,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CourseModuleDependencyConfig {
 
+    // We teach Spring how to create the CREATE Handler
     // Enseñamos a Spring cómo crear el Handler de CREAR
     @Bean
     public CreateCourseCommandHandler createCourseCommandHandler(H2CourseRepository repository, EventBus eventBus) {
         return new CreateCourseCommandHandler(repository, eventBus);
     }
 
+    // We teach Spring how to create the SEARCH Handler
     // Enseñamos a Spring cómo crear el Handler de BUSCAR
     @Bean
     public FindCourseQueryHandler findCourseQueryHandler(H2CourseRepository repository) {

@@ -18,6 +18,7 @@ public class SpringApplicationEventBus implements EventBus {
 
     @Override
     public void publish(List<DomainEvent> events) {
+        // We publish each event individually to the Spring system
         // Publicamos cada evento individualmente en el sistema de Spring
         events.forEach(publisher::publishEvent);
     }

@@ -12,7 +12,8 @@ public class FindCourseQueryHandler {
     }
 
     public CourseResponse handle(String id) {
-        CourseId courseId = new CourseId(id); // Validamos formato UUID al instanciar
+        CourseId courseId = new CourseId(id); // We validate UUID format when instantiating
+                                              // Validamos formato UUID al instanciar
 
         return repository.search(courseId)
                 .map(CourseResponse::fromAggregate)

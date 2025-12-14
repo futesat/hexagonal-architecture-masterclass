@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.futesat.hexagonal.infrastructure.config.SecurityConfig;
 import org.springframework.context.annotation.Import;
 
+// We test only the Web Layer (Controller) without starting the whole app
 // Probamos solo la capa Web (Controller) sin levantar toda la app
 @WebMvcTest(CoursePostController.class)
 @Import(SecurityConfig.class)
@@ -31,6 +32,7 @@ public class CoursePostControllerTest {
         @Autowired
         private ObjectMapper objectMapper;
 
+        // We mock the Handler because here we only test HTTP -> Application layer
         // Simulamos el Handler porque aquí solo probamos la capa HTTP -> Aplicación
         @MockBean
         private CreateCourseCommandHandler createCourseCommandHandler;
@@ -50,6 +52,7 @@ public class CoursePostControllerTest {
                                 .content(objectMapper.writeValueAsString(request)))
                                 .andExpect(status().isCreated());
 
+                // Verify that the controller called the use case correctly
                 // Verificamos que el controlador llamó al caso de uso correctamente
                 verify(createCourseCommandHandler).handle(any(CreateCourseCommand.class));
         }

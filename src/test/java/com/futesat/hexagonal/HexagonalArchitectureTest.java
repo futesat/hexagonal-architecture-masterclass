@@ -28,6 +28,7 @@ public class HexagonalArchitectureTest {
                         .and().haveSimpleNameNotEndingWith("Test")
                         .should().haveSimpleNameEndingWith("Controller");
 
+        // Extra rule: Value Objects and Entities must be in domain
         // Regla extra: los Value Objects y Entidades deben estar en dominio
         @ArchTest
         public static final ArchRule domain_model_should_be_in_domain_package = classes()

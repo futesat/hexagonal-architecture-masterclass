@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+// Base class for Identifiers (Shared Kernel)
 // Clase base para Identificadores (Shared Kernel)
+// This avoids repeating UUID and null validations in every ID we create (CourseId, StudentId, UserId...)
 // Esto evita repetir validaciones de UUID y nulls en cada ID que creemos (CourseId, StudentId, UserId...)
 public abstract class Identifier implements Serializable {
     private final String value;
@@ -14,6 +16,7 @@ public abstract class Identifier implements Serializable {
         this.value = value;
     }
 
+    // Private method to ensure integrity
     // Método privado para asegurar integridad
     private void ensureValidUuid(String value) {
         try {

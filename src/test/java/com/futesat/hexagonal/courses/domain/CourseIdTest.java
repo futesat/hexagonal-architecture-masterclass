@@ -19,6 +19,8 @@ class CourseIdTest {
 
     @Test
     void should_throw_exception_when_id_is_null() {
+        // Identifier throws exception when trying UUID.fromString(null) or validates
+        // before
         // Identifier lanza excepción al intentar hacer UUID.fromString(null) o valida
         // antes
         assertThrows(IllegalArgumentException.class, () -> new CourseId(null));

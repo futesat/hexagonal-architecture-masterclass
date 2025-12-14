@@ -10,10 +10,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.HashMap;
 import java.util.Map;
 
+// This component "listens" to all exceptions thrown in controllers
 // Este componente "escucha" todas las excepciones que saltan en los controladores
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    // We capture IllegalArgumentException (thrown by our Value Objects)
     // Capturamos IllegalArgumentException (que lanzan nuestros Value Objects)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleDomainException(IllegalArgumentException ex) {
@@ -21,6 +23,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("error", "Domain Error");
         body.put("message", ex.getMessage());
 
+        // We return 400 BAD REQUEST instead of 500
         // Devolvemos 400 BAD REQUEST en lugar de 500
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

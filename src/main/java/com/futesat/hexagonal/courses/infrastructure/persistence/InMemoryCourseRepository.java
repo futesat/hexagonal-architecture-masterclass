@@ -19,6 +19,7 @@ public class InMemoryCourseRepository implements CourseRepository {
 
     @Override
     public void save(Course course) {
+        // We save using the primitive ID (Value Object -> Primitive)
         // Guardamos usando el ID primitives (Value Object -> Primitivo)
         courses.put(course.id().getValue(), course);
         LOGGER.info("DEBUG: Curso guardado en memoria: {}", course.name().getValue());

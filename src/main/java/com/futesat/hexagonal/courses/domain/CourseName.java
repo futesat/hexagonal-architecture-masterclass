@@ -2,6 +2,7 @@ package com.futesat.hexagonal.courses.domain;
 
 import java.util.Objects;
 
+// Value Object for Name
 // Value Object para el Nombre
 public class CourseName {
     private final String value;
