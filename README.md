@@ -323,11 +323,10 @@ Para profundizar en estos conceptos, aquí tienes una selección de los mejores 
 
 ## ✅ Cómo ejecutar los Tests
 
-Como aplicamos **TDD**, los tests son ciudadanos de primera clase.
-
 ```bash
 # Ejecutar todos los tests
-./mvnw test
+Antes de Java 24: ./mvn test
+En Java 24: ./mvn test -Dnet.bytebuddy.experimental=true
 ```
 
-Verás que se ejecutan **15 tests** que validan desde la lógica pura del dominio hasta la integración de eventos y la propia arquitectura del código.
+Se ejecutan **15 tests** que validan desde la lógica pura del dominio hasta la integración de eventos y la propia arquitectura del código.
