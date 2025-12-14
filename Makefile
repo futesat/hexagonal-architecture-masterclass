@@ -1,4 +1,11 @@
-.PHONY: all build test run clean docker-build docker-run
+# Detección automática de Java 21 en macOS
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+	JAVA_HOME := $(shell /usr/libexec/java_home -v 21)
+	export JAVA_HOME
+endif
+
+.PHONY: all build test run clean docker-build docker-run docker-run-postgres
 
 # Objetivo por defecto
 all: build

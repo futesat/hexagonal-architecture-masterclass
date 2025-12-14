@@ -17,49 +17,53 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.futesat.hexagonal.infrastructure.config.SecurityConfig;
+import org.springframework.context.annotation.Import;
+
 // Probamos solo la capa Web (Controller) sin levantar toda la app
 @WebMvcTest(CoursePostController.class)
+@Import(SecurityConfig.class)
 public class CoursePostControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    // Simulamos el Handler porque aquí solo probamos la capa HTTP -> Aplicación
-    @MockBean
-    private CreateCourseCommandHandler createCourseCommandHandler;
+        // Simulamos el Handler porque aquí solo probamos la capa HTTP -> Aplicación
+        @MockBean
+        private CreateCourseCommandHandler createCourseCommandHandler;
 
-    @MockBean
-    private FindCourseQueryHandler findCourseQueryHandler;
+        @MockBean
+        private FindCourseQueryHandler findCourseQueryHandler;
 
-    @Test
-    void should_return_created_when_posting_valid_course() throws Exception {
-        CourseRequest request = new CourseRequest(
-                "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
-                "Spring Boot Hexagonal",
-                "5 hours");
+        @Test
+        void should_return_created_when_posting_valid_course() throws Exception {
+                CourseRequest request = new CourseRequest(
+                                "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+                                "Spring Boot Hexagonal",
+                                "5 hours");
 
-        mockMvc.perform(post("/courses")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+                mockMvc.perform(post("/courses")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                                .andExpect(status().isCreated());
 
-        // Verificamos que el controlador llamó al caso de uso correctamente
-        verify(createCourseCommandHandler).handle(any(CreateCourseCommand.class));
-    }
+                // Verificamos que el controlador llamó al caso de uso correctamente
+                verify(createCourseCommandHandler).handle(any(CreateCourseCommand.class));
+        }
 
-    @Test
-    void should_return_bad_request_when_posting_invalid_course() throws Exception {
-        CourseRequest request = new CourseRequest(
-                "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
-                "Hi", // Invalid: less than 5 chars
-                "5 hours");
+        @Test
+        void should_return_bad_request_when_posting_invalid_course() throws Exception {
+                CourseRequest request = new CourseRequest(
+                                "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+                                "Hi", // Invalid: less than 5 chars
+                                "5 hours");
 
-        mockMvc.perform(post("/courses")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-    }
+                mockMvc.perform(post("/courses")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                                .andExpect(status().isBadRequest());
+        }
 }
