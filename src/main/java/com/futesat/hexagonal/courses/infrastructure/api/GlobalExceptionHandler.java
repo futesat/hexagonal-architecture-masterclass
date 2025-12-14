@@ -3,6 +3,7 @@ package com.futesat.hexagonal.courses.infrastructure.api;
 import com.futesat.hexagonal.courses.application.find.CourseNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -37,12 +38,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @SuppressWarnings("null")
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             org.springframework.web.bind.MethodArgumentNotValidException ex,
             org.springframework.http.HttpHeaders headers,
             org.springframework.http.HttpStatusCode status,
-            org.springframework.web.context.request.WebRequest request) {
+            @NonNull org.springframework.web.context.request.WebRequest request) {
 
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors()

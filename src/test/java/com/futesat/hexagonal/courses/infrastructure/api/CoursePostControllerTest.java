@@ -40,6 +40,7 @@ public class CoursePostControllerTest {
         @MockBean
         private FindCourseQueryHandler findCourseQueryHandler;
 
+        @SuppressWarnings("null")
         @Test
         void should_return_created_when_posting_valid_course() throws Exception {
                 CourseRequest request = new CourseRequest(
@@ -57,6 +58,7 @@ public class CoursePostControllerTest {
                 verify(createCourseCommandHandler).handle(any(CreateCourseCommand.class));
         }
 
+        @SuppressWarnings("null")
         @Test
         void should_return_bad_request_when_posting_invalid_course() throws Exception {
                 CourseRequest request = new CourseRequest(

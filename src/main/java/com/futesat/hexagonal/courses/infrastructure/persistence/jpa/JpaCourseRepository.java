@@ -30,6 +30,7 @@ public class JpaCourseRepository implements CourseRepository {
         jpaRepository.save(entity);
     }
 
+    @SuppressWarnings("null")
     @Override
     public Optional<Course> search(CourseId id) {
         return jpaRepository.findById(id.getValue())
