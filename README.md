@@ -237,14 +237,20 @@ Documentación viva de la API.
     ```
     *Verás en la consola que se guarda el curso Y ADEMÁS salta el log del `WelcomeEmailSubscriber` simulan el envío de email.*
 
-5.  **Buscar el Curso (Lectura)**:
+5.  **Buscar un Curso Precargado (Lectura)**:
+    El sistema precarga automáticamente 2 cursos de ejemplo al arrancar. Puedes consultarlos directamente:
     ```bash
-    curl http://localhost:8080/courses/a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+    # Curso 1: Arquitectura Hexagonal Masterclass
+    curl http://localhost:8080/courses/1a9b456b-e85b-4b2a-a92c-d9a2c6d4838f
+    
+    # Curso 2: Domain-Driven Design Tactical Patterns
+    curl http://localhost:8080/courses/2b9b456b-e85b-4b2a-a92c-d9a2c6d4838f
     ```
 
-    > **Nota**: Al arrancar, el sistema precarga automáticamente dos cursos de ejemplo. Puedes probar a buscarlos usando estos IDs:
-    > - `1a9b456b-e85b-4b2a-a92c-d9a2c6d4838f`
-    > - `2b9b456b-e85b-4b2a-a92c-d9a2c6d4838f`
+    > **💡 Tip**: También puedes crear tu propio curso con el comando del paso 4 y luego buscarlo con su UUID.
+    
+    > **⚠️ Importante**: Los IDs deben ser UUIDs válidos (formato: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). 
+    > Si intentas usar un ID simple como `1` o `abc`, recibirás un error de validación.
 
 ### 🐳 Despliegue con Docker
 La aplicación incluye un `Dockerfile` multi-stage optimizado.
