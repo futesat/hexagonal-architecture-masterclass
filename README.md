@@ -1,7 +1,7 @@
 # Ejemplo Didáctico: Arquitectura Hexagonal con Spring Boot
 
 [![CI](https://github.com/futesat/hexagonal-architecture-masterclass/actions/workflows/maven.yml/badge.svg)](https://github.com/futesat/hexagonal-architecture-masterclass/actions/workflows/maven.yml)
-[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://www.oracle.com/java/)
+[![Java](https://img.shields.io/badge/Java-21+-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -84,7 +84,7 @@ Características listas para producción (Cloud/Kubernetes).
 - **Metrics**: Endpoint `/actuator/metrics` para monitorización (Prometheus, Grafana).
 
 ### 13. Java Moderno (Records)
-Uso de características de Java 17+.
+Uso de características de Java 21+.
 - **Records**: Los DTOs (`CreateCourseCommand`, `CourseResponse`) son `record` en lugar de `class`. Esto elimina boilerplate (getters, equals, hashCode, toString) y hace el código más conciso y seguro (inmutabilidad por defecto).
 
 ---
@@ -257,12 +257,12 @@ La aplicación incluye un `Dockerfile` multi-stage optimizado.
 
 1.  **Construir la imagen**:
     ```bash
-    docker build -t hexagonal-demo .
+    docker build -t hexagonal-architecture-masterclass .
     ```
 
 2.  **Ejecutar el contenedor**:
     ```bash
-    docker run -p 8080:8080 hexagonal-demo
+    docker run -p 8080:8080 hexagonal-architecture-masterclass
     ```
     *La API estará disponible en `http://localhost:8080`*.
 
@@ -347,8 +347,7 @@ Para profundizar en estos conceptos, aquí tienes una selección de los mejores 
 
 ```bash
 # Ejecutar todos los tests
-Antes de Java 24: ./mvnw test
-En Java 24: ./mvnw test -Dnet.bytebuddy.experimental=true
+./mvnw test
 ```
 
 Se ejecutan **15 tests** que validan desde la lógica pura del dominio hasta la integración de eventos y la propia arquitectura del código.

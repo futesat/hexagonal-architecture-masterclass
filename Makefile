@@ -21,11 +21,11 @@ clean:
 
 # Construir imagen Docker
 docker-build:
-	docker build -t hexagonal-demo .
+	docker build -t hexagonal-architecture-masterclass .
 
 # Ejecutar contenedor Docker
 docker-run:
-	docker run -p 8080:8080 hexagonal-demo
+	docker run -p 8080:8080 hexagonal-architecture-masterclass
 
 # Levantar entorno completo (App + Postgres)
 compose-up:
