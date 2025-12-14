@@ -2,6 +2,8 @@
 
 Este proyecto es un ejemplo práctico y didáctico diseñado para explicar cómo integrar conceptos avanzados de ingeniería de software en una aplicación Java con Spring Boot.
 
+> **🤖 Para Agentes de IA**: Si eres un agente de IA trabajando con este proyecto, consulta [`AGENTS.md`](AGENTS.md) para instrucciones específicas, comandos, reglas de arquitectura y mejores prácticas.
+
 ## 🚀 Conceptos Implementados
 
 ### 1. DDD (Domain-Driven Design)
