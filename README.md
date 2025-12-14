@@ -291,6 +291,15 @@ Para demostrar el desacoplamiento real, hemos configurado:
 - **Latencia Simulada**: El `FakeEmailSender` tiene un `Thread.sleep(2000)` intencional.
 - **Resultado**: Aunque enviar el email tarda 2 segundos, la API HTTP responde en milisegundos (`201 Created`). El usuario no espera.
 
+### 20. Optimización de Performance
+El proyecto incluye optimizaciones para mejorar el tiempo de arranque:
+- **Lazy Initialization**: Los beans se inicializan solo cuando se necesitan
+- **JMX Desactivado**: Reduce overhead en desarrollo
+- **JPA Optimizado**: `open-in-view=false` para evitar lazy loading issues
+- **Component Scan Específico**: Solo escanea paquetes necesarios
+
+**Resultado**: Tiempo de arranque reducido significativamente sin comprometer funcionalidad.
+
 ---
 
 ## 📚 Referencias y Lecturas Recomendadas
