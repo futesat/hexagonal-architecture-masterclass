@@ -9,6 +9,8 @@ Este proyecto es un ejemplo práctico y didáctico diseñado para explicar cómo
 
 > **🤖 Para Agentes de IA**: Si eres un agente de IA trabajando con este proyecto, consulta [`AGENTS.md`](AGENTS.md) para instrucciones específicas, comandos, reglas de arquitectura y mejores prácticas.
 
+> **✨ Powered by AI**: Este proyecto ha sido creado y refactorizado con la ayuda del asistente **Gemini 3**.
+
 ## 🚀 Conceptos Implementados
 
 ### 1. DDD (Domain-Driven Design)
