@@ -1,0 +1,28 @@
+### Verificar Salud (Actuator)
+GET http://localhost:8080/actuator/health
+
+### Crear un curso nuevo (Happy Path)
+POST http://localhost:8080/courses
+Content-Type: application/json
+
+{
+  "id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+  "name": "Hexagonal Architecture Masterclass",
+  "duration": "10 hours"
+}
+
+### Intentar crear curso inválido (Validación - Nombre muy corto)
+POST http://localhost:8080/courses
+Content-Type: application/json
+
+{
+  "id": "87c4a123-5b8d-4e9f-8a1c-9d3e5f7a2b10",
+  "name": "Hi",
+  "duration": "1 hour"
+}
+
+### Buscar el curso creado
+GET http://localhost:8080/courses/a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+
+### Buscar curso inexistente (404)
+GET http://localhost:8080/courses/ffffffff-ffff-ffff-ffff-ffffffffffff
