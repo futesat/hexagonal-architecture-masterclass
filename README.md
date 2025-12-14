@@ -1,103 +1,105 @@
-# Ejemplo Didáctico: Arquitectura Hexagonal con Spring Boot
+# Didactic Example: Hexagonal Architecture with Spring Boot
 
 [![CI](https://github.com/futesat/hexagonal-architecture-masterclass/actions/workflows/maven.yml/badge.svg)](https://github.com/futesat/hexagonal-architecture-masterclass/actions/workflows/maven.yml)
 [![Java](https://img.shields.io/badge/Java-21+-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Este proyecto es un ejemplo práctico y didáctico diseñado para explicar cómo integrar conceptos avanzados de ingeniería de software en una aplicación Java con Spring Boot.
+[Leer en Español](README_es.md)
 
-> **🤖 Para Agentes de IA**: Si eres un agente de IA trabajando con este proyecto, consulta [`AGENTS.md`](AGENTS.md) para instrucciones específicas, comandos, reglas de arquitectura y mejores prácticas.
+This project is a practical and didactic example designed to explain how to integrate advanced software engineering concepts into a Java application with Spring Boot.
 
-> **✨ Powered by AI**: Este proyecto ha sido creado y refactorizado con la ayuda del asistente **Gemini 3**.
+> **🤖 For AI Agents**: If you are an AI agent working with this project, consult [`AGENTS.md`](AGENTS.md) for specific instructions, commands, architecture rules, and best practices.
 
-## 🚀 Conceptos Implementados
+> **✨ Powered by AI**: This project has been created and refactored with the help of the **Gemini 3** assistant.
+
+## 🚀 Concepts Implemented
 
 ### 1. DDD (Domain-Driven Design)
-El núcleo del software es el **Dominio** (la lógica de negocio), y debe estar aislado de detalles técnicos.
-- **Entidades Ricas**: `Course` no es solo 'datos', contiene lógica y validaciones.
-- **Value Objects**: `CourseId` y `CourseName`. Evitamos usar tipos primitivos (`String`, `int`) para conceptos de dominio. Esto previene errores (ej. pasar un nombre donde se espera un ID) y encapsula reglas de validación.
+The core of the software is the **Domain** (business logic), and it must be isolated from technical details.
+- **Rich Entities**: `Course` is not just 'data', it contains logic and validations.
+- **Value Objects**: `CourseId` and `CourseName`. We avoid using primitive types (`String`, `int`) for domain concepts. This prevents errors (e.g., passing a name where an ID is expected) and encapsulates validation rules.
 
-### 2. Arquitectura Hexagonal (Ports & Adapters)
-Divide la aplicación en **Interior** (Dominio + Aplicación) y **Exterior** (Infraestructura).
-- **Puertos (Ports)**: Interfaces definidas en el dominio (`CourseRepository`). El dominio dice *qué* necesita, pero no *cómo* se hace.
-- **Adaptadores (Adapters)**: Implementaciones en la capa de infraestructura.
-    - **Driver (Entrada)**: `CoursePostController` (API REST).
-    - **Driven (Salida)**: `InMemoryCourseRepository` (Base de datos).
+### 2. Hexagonal Architecture (Ports & Adapters)
+Divides the application into **Inside** (Domain + Application) and **Outside** (Infrastructure).
+- **Ports**: Interfaces defined in the domain (`CourseRepository`). The domain states *what* it needs, but not *how* it is done.
+- **Adapters**: Implementations in the infrastructure layer.
+    - **Driver (Input)**: `CoursePostController` (REST API).
+    - **Driven (Output)**: `InMemoryCourseRepository` (Database).
 
 ### 3. Clean Code
-Código legible y mantenible.
-- **Nombres Expresivos**: Las clases y métodos dicen exactamente qué hacen.
-- **Métodos Cortos**: Responsabilidad única (SOLID).
-- **Constructores Semánticos**: Uso de métodos de fabricación estáticos (`Course.create(...)`) en lugar de constructores complejos públicos.
+Readable and maintainable code.
+- **Expressive Names**: Classes and methods say exactly what they do.
+- **Short Methods**: Single responsibility (SOLID).
+- **Semantic Constructors**: Use of static factory methods (`Course.create(...)`) instead of complex public constructors.
 
 ### 4. CQRS (Command Query Responsibility Segregation)
-Separación de operaciones de Escritura (Command) y Lectura (Query).
-- **Write Side (Comando)**: Optimizado para consistencia y reglas de negocio.
-    - `CreateCourseCommand`: Intención de usuario.
-    - `CreateCourseCommandHandler`: Lógica que modifica el estado.
-- **Read Side (Query)**: Optimizado para la vista del cliente.
-    - `FindCourseQueryHandler`: Busca datos y devuelve DTOs planos (`CourseResponse`). Nunca exponemos la Entidad de Dominio directamente en la lectura para no acoplar la API a las reglas internas.
+Separation of Write (Command) and Read (Query) operations.
+- **Write Side (Command)**: Optimized for consistency and business rules.
+    - `CreateCourseCommand`: User intention.
+    - `CreateCourseCommandHandler`: Logic that modifies state.
+- **Read Side (Query)**: Optimized for the client view.
+    - `FindCourseQueryHandler`: Fetches data and returns plain DTOs (`CourseResponse`). We never expose the Domain Entity directly in reading to avoid coupling the API to internal rules.
 
-### 5. Shared Kernel (Núcleo Compartido)
-Código reutilizable entre distintos Bounded Contexts (módulos).
-- **Identifier**: Clase base abstracta (`shared.domain.Identifier`) que encapsula la lógica y validación de UUIDs. `CourseId` hereda de ella, evitando duplicación de código si mañana creamos `StudentId`.
+### 5. Shared Kernel
+Reusable code between different Bounded Contexts (modules).
+- **Identifier**: Abstract base class (`shared.domain.Identifier`) that encapsulates UUID logic and validation. `CourseId` inherits from it, avoiding code duplication if we create `StudentId` tomorrow.
 
-### 6. Manejo Global de Errores (Error Handling)
-Transformación de excepciones de dominio en respuestas HTTP coherentes.
-- **GlobalExceptionHandler**: Usa `@ControllerAdvice` de Spring para capturar excepciones:
-    - `IllegalArgumentException` (Validación) -> **400 Bad Request**.
-    - `CourseNotFound` (No existe) -> **404 Not Found**.
+### 6. Global Error Handling
+Transformation of domain exceptions into coherent HTTP responses.
+- **GlobalExceptionHandler**: Uses Spring's `@ControllerAdvice` to capture exceptions:
+    - `IllegalArgumentException` (Validation) -> **400 Bad Request**.
+    - `CourseNotFound` (Not exists) -> **404 Not Found**.
 
 ### 7. TDD (Test-Driven Development)
-Desarrollo guiado por pruebas en todos los niveles.
-- **Unitarios Dominio**: `CourseNameTest` y `CourseIdTest` blindan las reglas de negocio (validaciones, nulos...).
-- **Unitarios Aplicación**: `CreateCourseCommandHandlerTest` verifica la orquestación (mocks).
-- **Integración API**: `CoursePostControllerTest` verifica la capa web HTTP simulando peticiones reales.
+Development guided by tests at all levels.
+- **Domain Unit**: `CourseNameTest` and `CourseIdTest` shield business rules (validations, nulls...).
+- **Application Unit**: `CreateCourseCommandHandlerTest` verifies orchestration (mocks).
+- **API Integration**: `CoursePostControllerTest` verifies the HTTP web layer simulating real requests.
 
-### 8. Eventos de Dominio (Domain Events)
-Mecanismo para desacoplar efectos secundarios (enviar email, logs, analytics).
-- **Core**: `AggregateRoot` (Shared Kernel) permite a las entidades registrar qué ha pasado (`record()`).
-- **Evento**: `CourseCreatedEvent` captura que un curso fue creado.
-- **Publicación**: El Handler recupera los eventos del agregado (`pullDomainEvents()`) y los publica en el `EventBus`.
-- **Infraestructura**: `SpringApplicationEventBus` usa el sistema nativo de Spring para propagarlos.
+### 8. Domain Events
+Mechanism to decouple side effects (send email, logs, analytics).
+- **Core**: `AggregateRoot` (Shared Kernel) allows entities to record what happened (`record()`).
+- **Event**: `CourseCreatedEvent` captures that a course was created.
+- **Publication**: The Handler retrieves events from the aggregate (`pullDomainEvents()`) and publishes them to the `EventBus`.
+- **Infrastructure**: `SpringApplicationEventBus` uses Spring's native system to propagate them.
 
-### 9. Inyección de Dependencias Pura (Dependency Inversion)
-Desacoplamiento total del framework.
-- **Problema**: Usar `@Service` o `@Autowired` dentro de los Handlers ensucia el código de aplicación con dependencias de Spring.
-- **Solución**: Los Handlers (`CreateCourseCommandHandler`) son POJOs puros (Plain Old Java Objects) sin anotaciones.
-- **Configuración**: La clase `CourseModuleDependencyConfig` en la capa de infraestructura es la única que sabe de Spring y declara los `@Bean`, inyectando manualmente repositorios y buses. Esto permite migrar a otro framework (Quarkus, Micronaut) sin tocar la lógica de negocio.
+### 9. Pure Dependency Injection (Dependency Inversion)
+Total decoupling from the framework.
+- **Problem**: Using `@Service` or `@Autowired` inside Handlers dirties application code with Spring dependencies.
+- **Solution**: Handlers (`CreateCourseCommandHandler`) are pure POJOs (Plain Old Java Objects) without annotations.
+- **Configuration**: The `CourseModuleDependencyConfig` class in the infrastructure layer is the only one that knows about Spring and declares `@Bean`s, manually injecting repositories and buses. This allows migrating to another framework (Quarkus, Micronaut) without touching business logic.
 
-### 10. Validación de Entrada (Fail Fast)
-Protección de la capa de dominio ante datos inválidos desde la entrada.
-- **Bean Validation (JSR-380)**: Uso de anotaciones estándar (`@NotBlank`, `@Size`, etc.) en los DTOs de entrada (`CourseRequest`).
-- **Fail Fast**: El controlador rechaza peticiones inválidas antes de que toquen el dominio o la aplicación.
-- **Global Error Handling**: `GlobalExceptionHandler` intercepta los errores de validación (`MethodArgumentNotValidException`) y devuelve una respuesta estructurada (JSON con campo y error) y código HTTP **400 Bad Request**.
+### 10. Input Validation (Fail Fast)
+Protection of the domain layer from invalid data at the entrance.
+- **Bean Validation (JSR-380)**: Use of standard annotations (`@NotBlank`, `@Size`, etc.) in input DTOs (`CourseRequest`).
+- **Fail Fast**: The controller rejects invalid requests before they touch the domain or application.
+- **Global Error Handling**: `GlobalExceptionHandler` intercepts validation errors (`MethodArgumentNotValidException`) and returns a structured response (JSON with field and error) and HTTP code **400 Bad Request**.
 
-### 11. Tests Avanzados
-Estrategia de testing piramidal robusta.
-- **Tests de Arquitectura (ArchUnit)**: Reglas refinadas que aseguran el aislamiento del dominio pero permiten flexibilidad en nombres de clases auxiliares de infraestructura.
-- **Tests de Integración de Eventos**: `WelcomeEmailIntegrationTest` levanta el contexto de Spring para verificar el flujo asíncrono completo: *Publicación Evento -> Listener -> Caso de Uso -> Puerto -> Adaptador (Mock)*.
-- **Tests de Serialización**: `DomainEventSerializationTest` asegura que los eventos de dominio se pueden convertir a JSON correctamente, simulando un escenario real de mensajería (Kafka/RabbitMQ).
+### 11. Advanced Tests
+Robust testing pyramid strategy.
+- **Architecture Tests (ArchUnit)**: Refined rules ensuring domain isolation but allowing flexibility in infrastructure naming.
+- **Event Integration Tests**: `WelcomeEmailIntegrationTest` lifts the Spring context to verify the full async flow: *Event Publication -> Listener -> Use Case -> Port -> Adapter (Mock)*.
+- **Serialization Tests**: `DomainEventSerializationTest` ensures domain events can be correctly converted to JSON, simulating a real messaging scenario (Kafka/RabbitMQ).
 
-### 12. Observabilidad (Actuator)
-Características listas para producción (Cloud/Kubernetes).
-- **Health Checks**: Endpoint `/actuator/health` para que orquestadores sepan si el pod está vivo.
-- **Metrics**: Endpoint `/actuator/metrics` para monitorización (Prometheus, Grafana).
+### 12. Observability (Actuator)
+Production-ready features (Cloud/Kubernetes).
+- **Health Checks**: Endpoint `/actuator/health` so orchestrators know if the pod is alive.
+- **Metrics**: Endpoint `/actuator/metrics` for monitoring (Prometheus, Grafana).
 
-### 13. Java Moderno (Records)
-Uso de características de Java 21+.
-- **Records**: Los DTOs (`CreateCourseCommand`, `CourseResponse`) son `record` en lugar de `class`. Esto elimina boilerplate (getters, equals, hashCode, toString) y hace el código más conciso y seguro (inmutabilidad por defecto).
+### 13. Modern Java (Records)
+Use of Java 21+ features.
+- **Records**: DTOs (`CreateCourseCommand`, `CourseResponse`) are `record` instead of `class`. This eliminates boilerplate (getters, equals, hashCode, toString) and makes code more concise and safe (immutability by default).
 
 ---
 
-## 📂 Estructura del Proyecto
+## 📂 Project Structure
 
-La estructura de paquetes refleja el **Negocio** (Módulos) y no las capas técnicas.
+Packet structure reflects **Business** (Modules) and not technical layers.
 
 ```text
 src/main/java/com/hexagonal/demo
-├── courses                          <-- MÓDULO BOUNDED CONTEXT
+├── courses                          <-- BOUNDED CONTEXT MODULE
 │   ├── application
 │   │   ├── create                   <-- WRITE SIDE
 │   │   │   ├── CreateCourseCommand.java
@@ -116,36 +118,36 @@ src/main/java/com/hexagonal/demo
 │       │   └── CoursePostController.java
 │       └── persistence
 │           └── InMemoryCourseRepository.java
-└── shared                           <-- KERNEL COMPARTIDO
+└── shared                           <-- SHARED KERNEL
     ├── domain
     │   ├── AggregateRoot.java
     │   ├── Identifier.java
-    │   └── bus/event                (Puertos de Eventos)
+    │   └── bus/event                (Event Ports)
     └── infrastructure
-        └── bus/event/spring         (Adaptador Spring)
+        └── bus/event/spring         (Spring Adapter)
 ```
 
 ```
 
-### 🗺️ Mapa de Arquitectura
-Representación visual del flujo de dependencias y aislamiento del dominio.
+### 🗺️ Architecture Map
+Visual representation of dependency flow and domain isolation.
 
 ```mermaid
 graph TD
-    subgraph Infrastructure [Infraestructura (Exterior)]
+    subgraph Infrastructure [Infrastructure (Outside)]
         style Infrastructure fill:#ffdfba,stroke:#333,stroke-width:2px
         API[API REST Controller]
         DB[H2 Persistence Adapter]
         EmailAdapter[Fake Email Sender]
     end
 
-    subgraph Application [Aplicación (Orquestación)]
+    subgraph Application [Application (Orchestration)]
         style Application fill:#ffffba,stroke:#333,stroke-width:2px
         CMD[Create Course Handler]
         QUERY[Find Course Handler]
     end
 
-    subgraph Domain [Dominio (Núcleo)]
+    subgraph Domain [Domain (Core)]
         style Domain fill:#baffc9,stroke:#333,stroke-width:4px
         Course[Course Entity]
         RepoPort[<<Interface>>\nCourseRepository]
@@ -170,162 +172,162 @@ graph TD
 
 ---
 
-## 🛠️ Flujo de Ejecución (Paso a Paso)
+## 🛠️ Execution Flow (Step by Step)
 
-### Flujo de Escritura (POST /courses)
-1.  **Petición HTTP**: El usuario envía un `POST /courses`.
-2.  **Adaptador de Entrada**: `CoursePostController` -> `CreateCourseCommand`.
+### Write Flow (POST /courses)
+1.  **HTTP Request**: User sends a `POST /courses`.
+2.  **Input Adapter**: `CoursePostController` -> `CreateCourseCommand`.
 3.  **Application Service**: `CreateCourseCommandHandler`.
-    1.  Crea `Course`.
-    2.  `Course` (Dominio) se crea y **registra** internamente `CourseCreatedEvent`.
-    3.  Persiste en Repositorio.
-    4.  Publica eventos en `EventBus`.
-4.  **Efectos Secundarios (Desacoplamiento)**:
-    - `WelcomeEmailSubscriber` escucha el `CourseCreatedEvent`.
-    - Invoca al Caso de Uso `SendWelcomeEmail` (Application).
-    - Este usa el Puerto `EmailSender` (Domain).
-    - Finalmente, el Adaptador `FakeEmailSender` (Infra) ejecuta la acción (log).
+    1.  Creates `Course`.
+    2.  `Course` (Domain) is created and internally **records** `CourseCreatedEvent`.
+    3.  Persists in Repository.
+    4.  Publishes events to `EventBus`.
+4.  **Side Effects (Decoupling)**:
+    - `WelcomeEmailSubscriber` listens to `CourseCreatedEvent`.
+    - Invokes `SendWelcomeEmail` Use Case (Application).
+    - This uses `EmailSender` Port (Domain).
+    - Finally, `FakeEmailSender` Adapter (Infra) executes the action (log).
 
-### Flujo de Lectura (GET /courses/{id})
-1.  **Petición HTTP**: Recibe `GET /courses/uuid`.
-2.  **Query Handler**: `FindCourseQueryHandler` busca en el repositorio.
-3.  **Respuesta**:
-    - **Si existe**: Convierte `Course` -> `CourseResponse` (DTO) y devuelve 200 OK.
-    - **Si no existe**: Lanza `CourseNotFound`. El `GlobalExceptionHandler` la captura y devuelve 404.
+### Read Flow (GET /courses/{id})
+1.  **HTTP Request**: Receives `GET /courses/uuid`.
+2.  **Query Handler**: `FindCourseQueryHandler` searches in repository.
+3.  **Response**:
+    - **If exists**: Converts `Course` -> `CourseResponse` (DTO) and returns 200 OK.
+    - **If not exists**: Throws `CourseNotFound`. `GlobalExceptionHandler` captures it and returns 404.
 
 ### 14. Developer Experience (Makefile & HTTP Client)
-Para simplificar el desarrollo:
-- **Makefile**: Atajos para comandos comunes (`make run`, `make test`).
-- **requests.http**: Archivo ejecutable en IntelliJ/VSCode para probar la API sin salir del editor.
+To simplify development:
+- **Makefile**: Shortcuts for common commands (`make run`, `make test`).
+- **requests.http**: Executable file in IntelliJ/VSCode to test API without leaving the editor.
 
 ```bash
-make help          # Ver todos los comandos
+make help          # See all commands
 ```
 
 ### 15. Swagger UI (OpenAPI)
-Documentación viva de la API.
-- Accesible en `http://localhost:8080/swagger-ui.html` al arrancar la app.
-- Permite probar los endpoints visualmente.
+Living API documentation.
+- Accessible at `http://localhost:8080/swagger-ui.html` when app starts.
+- Allows testing endpoints visually.
 
 ---
 
-## 🚀 Cómo Probar la Aplicación
+## 🚀 How to Test the Application
 
-1.  **Arrancar**:
+1.  **Start**:
     ```bash
     ./mvnw spring-boot:run
     ```
 
-2.  **Verificar Salud (Actuator)**:
+2.  **Check Health (Actuator)**:
     ```bash
     curl http://localhost:8080/actuator/health
-    # Respuesta: {"status":"UP"}
+    # Response: {"status":"UP"}
     ```
 
-3.  **Prueba de Validación (Fail Fast)**:
-    Intenta crear un curso con nombre corto:
+3.  **Validation Test (Fail Fast)**:
+    Try to create a course with a short name:
     ```bash
     curl -X POST http://localhost:8080/courses \
          -H "Content-Type: application/json" \
-         -d '{"id": "uuid-valido", "name": "Hi", "duration": "15m"}'
+         -d '{"id": "valid-uuid", "name": "Hi", "duration": "15m"}'
     ```
-    *Recibirás un 400 Bad Request con el detalle del error de validación.*
+    *You will receive a 400 Bad Request with validation error details.*
 
-4.  **Crear un Curso (Escritura + Evento)**:
+4.  **Create a Course (Write + Event)**:
     ```bash
     curl -X POST http://localhost:8080/courses \
          -H "Content-Type: application/json" \
          -d '{"id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "name": "Hexagonal Master", "duration": "15m"}'
     ```
-    *Verás en la consola que se guarda el curso Y ADEMÁS salta el log del `WelcomeEmailSubscriber` simulan el envío de email.*
+    *You will see in console that the course is saved AND the `WelcomeEmailSubscriber` log simulating email sending.*
 
-5.  **Buscar un Curso Precargado (Lectura)**:
-    El sistema precarga automáticamente 2 cursos de ejemplo al arrancar. Puedes consultarlos directamente:
+5.  **Search Preloaded Course (Read)**:
+    The system automatically preloads 2 example courses at startup. You can query them directly:
     ```bash
-    # Curso 1: Arquitectura Hexagonal Masterclass
+    # Course 1: Hexagonal Architecture Masterclass
     curl http://localhost:8080/courses/1a9b456b-e85b-4b2a-a92c-d9a2c6d4838f
     
-    # Curso 2: Domain-Driven Design Tactical Patterns
+    # Course 2: Domain-Driven Design Tactical Patterns
     curl http://localhost:8080/courses/2b9b456b-e85b-4b2a-a92c-d9a2c6d4838f
     ```
 
-    > **💡 Tip**: También puedes crear tu propio curso con el comando del paso 4 y luego buscarlo con su UUID.
+    > **💡 Tip**: You can also create your own course with the command in step 4 and then find it by its UUID.
     
-    > **⚠️ Importante**: Los IDs deben ser UUIDs válidos (formato: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). 
-    > Si intentas usar un ID simple como `1` o `abc`, recibirás un error de validación.
+    > **⚠️ Important**: IDs must be valid UUIDs (format: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). 
+    > If you try to use a simple ID like `1` or `abc`, you will receive a validation error.
 
-### 🐳 Despliegue con Docker
-La aplicación incluye un `Dockerfile` multi-stage optimizado.
+### 🐳 Deployment with Docker
+The application includes an optimized multi-stage `Dockerfile`.
 
-1.  **Construir la imagen**:
+1.  **Build the image**:
     ```bash
     docker build -t hexagonal-architecture-masterclass .
     ```
 
-2.  **Ejecutar el contenedor**:
+2.  **Run the container**:
     ```bash
     docker run -p 8080:8080 hexagonal-architecture-masterclass
     ```
-    *La API estará disponible en `http://localhost:8080`*.
+    *API will be available at `http://localhost:8080`*.
 
-### 15. Base de Datos Real (JPA + H2)
-Demostración de cambio de adaptador (Persistencia) sin afectar al dominio.
-- **Implementación**: `H2CourseRepository` usa `JpaRepository` y mapea la entidad `CourseEntity` (infraestructura) hacia `Course` (dominio).
-- **Consola H2**: Accesible en `http://localhost:8080/h2-console`
+### 15. Real Database (JPA + H2)
+Demonstration of adapter change (Persistence) without affecting the domain.
+- **Implementation**: `H2CourseRepository` uses `JpaRepository` and maps `CourseEntity` (infrastructure) to `Course` (domain).
+- **H2 Console**: Accessible at `http://localhost:8080/h2-console`
     - JDBC URL: `jdbc:h2:mem:testdb`
     - User: `sa`
-    - Password: (vacío)
+    - Password: (empty)
 
-### 16. Orquestación (Microservicio + PostgreSQL)
-Para demostrar la portabilidad real de la arquitectura hexagonal, incluimos un `docker-compose.yml`.
-Este levanta:
-1.  **PostgreSQL 15**: Base de datos de producción real.
-2.  **Hexagonal App**: Configurada (via variables de entorno) para conectarse a Postgres en lugar de H2.
+### 16. Orchestration (Microservice + PostgreSQL)
+To demonstrate real portability of hexagonal architecture, we include a `docker-compose.yml`.
+It spins up:
+1.  **PostgreSQL 15**: Real production database.
+2.  **Hexagonal App**: Configured (via env vars) to connect to Postgres instead of H2.
 
 ```bash
 make compose-up
 ```
-*Esto demuestra que la capa de Dominio NO cambia aunque cambiemos la infraestructura de H2 (Memoria) a Postgres (Disco).*
+*This demonstrates that Domain layer DOES NOT change even if we change infrastructure from H2 (Memory) to Postgres (Disk).*
 
-### 17. Decisiones de Arquitectura (ADRs)
-Documentamos el "por qué" de nuestras decisiones técnicas usando el formato ADR.
-- [001 - Adoptar Arquitectura Hexagonal](docs/adr/001-adoptar-arquitectura-hexagonal.md)
+### 17. Architecture Decisions (ADRs)
+We document the "why" of our technical decisions using ADR format.
+- [001 - Adopt Hexagonal Architecture](docs/adr/001-adoptar-arquitectura-hexagonal.md)
 
-### 18. Calidad de Código (Coverage)
-El proyecto incluye **JaCoCo** para medir la cobertura de los tests.
+### 18. Code Quality (Coverage)
+Project includes **JaCoCo** to measure test coverage.
 ```bash
 make coverage
 ```
-*Esto ejecutará los tests y abrirá automáticamente un reporte web detallado en tu navegador.*
+*This will run tests and automatically open a detailed web report in your browser.*
 
-### 19. Eventos Asíncronos (Performance)
-Para demostrar el desacoplamiento real, hemos configurado:
-- **`@Async`**: El envío de email ocurre en un hilo separado.
-- **Latencia Simulada**: El `FakeEmailSender` tiene un `Thread.sleep(2000)` intencional.
-- **Resultado**: Aunque enviar el email tarda 2 segundos, la API HTTP responde en milisegundos (`201 Created`). El usuario no espera.
+### 19. Async Events (Performance)
+To demonstrate real decoupling, we have configured:
+- **`@Async`**: Email sending happens in a separate thread.
+- **Simulated Latency**: `FakeEmailSender` has an intentional `Thread.sleep(2000)`.
+- **Result**: Even though sending email takes 2 seconds, HTTP API responds in milliseconds (`201 Created`). User doesn't wait.
 
-### 20. Optimización de Performance
-El proyecto incluye optimizaciones para mejorar el tiempo de arranque:
-- **Lazy Initialization**: Los beans se inicializan solo cuando se necesitan
-- **JMX Desactivado**: Reduce overhead en desarrollo
-- **JPA Optimizado**: `open-in-view=false` para evitar lazy loading issues
-- **Component Scan Específico**: Solo escanea paquetes necesarios
+### 20. Performance Optimization
+Project includes optimizations to improve startup time:
+- **Lazy Initialization**: Beans initialized only when needed
+- **JMX Disabled**: Reduces overhead in development
+- **JPA Optimized**: `open-in-view=false` to avoid lazy loading issues
+- **Specific Component Scan**: Only scans necessary packages
 
-**Resultado**: Tiempo de arranque reducido significativamente sin comprometer funcionalidad.
+**Result**: Significantly reduced startup time without compromising functionality.
 
 ---
 
-## 📚 Referencias y Lecturas Recomendadas
+## 📚 References and Recommended Reading
 
-Para profundizar en estos conceptos, aquí tienes una selección de los mejores recursos:
+To deepen these concepts, here are some of the best resources:
 
-### 🏰 Arquitectura Hexagonal (Ports & Adapters)
-- [Alistair Cockburn - Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/) (Fuente original)
-- [Herberto Graça - Ports & Adapters Architecture](https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/) (Excelente explicación visual)
+### 🏰 Hexagonal Architecture (Ports & Adapters)
+- [Alistair Cockburn - Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/) (Original source)
+- [Herberto Graça - Ports & Adapters Architecture](https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/) (Excellent visual explanation)
 
 ### 📘 DDD (Domain-Driven Design)
 - [Martin Fowler - Domain Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)
-- [Domain-Driven Design Reference (Eric Evans)](https://www.domainlanguage.com/ddd/reference/) (Resumen oficial gratuito)
+- [Domain-Driven Design Reference (Eric Evans)](https://www.domainlanguage.com/ddd/reference/) (Official free summary)
 
 ### ✨ Clean Code & SOLID
 - [Clean Code: A Handbook of Agile Software Craftsmanship (Robert C. Martin)](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)
@@ -339,17 +341,17 @@ Para profundizar en estos conceptos, aquí tienes una selección de los mejores 
 - [Kent Beck - Test Driven Development: By Example](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530)
 - [Martin Fowler - TDD](https://martinfowler.com/bliki/TestDrivenDevelopment.html)
 
-### 📡 Eventos de Dominio
+### 📡 Domain Events
 - [Vaughn Vernon - Domain Events](https://kalele.io/blog-posts/domain-events-salvation/)
-- [Spring Events - Baeldung](https://www.baeldung.com/spring-events) (Implementación técnica en Spring)
+- [Spring Events - Baeldung](https://www.baeldung.com/spring-events) (Technical implementation in Spring)
 
 ---
 
-## ✅ Cómo ejecutar los Tests
+## ✅ How to Run Tests
 
 ```bash
-# Ejecutar todos los tests
+# Run all tests
 ./mvnw test
 ```
 
-Se ejecutan **15 tests** que validan desde la lógica pura del dominio hasta la integración de eventos y la propia arquitectura del código.
+**15 tests** are executed validating from pure domain logic to event integration and architecture rules.

@@ -27,6 +27,10 @@ docker-build:
 docker-run:
 	docker run -p 8080:8080 hexagonal-architecture-masterclass
 
+# Ejecutar aplicación con PostgreSQL (Docker Compose)
+docker-run-postgres:
+	docker-compose up --build
+
 # Levantar entorno completo (App + Postgres)
 compose-up:
 	docker-compose up --build
@@ -50,9 +54,10 @@ coverage: test
 # Ayuda
 help:
 	@echo "Comandos disponibles:"
-	@echo "  make build         - Compilar el proyecto (sin tests)"
-	@echo "  make test          - Ejecutar todos los tests"
-	@echo "  make run           - Arrancar la aplicación"
-	@echo "  make docker-build  - Construir imagen Docker"
-	@echo "  make docker-run    - Correr contenedor Docker"
-	@echo "  make health        - Comprobar estado (requiere app corriendo)"
+	@echo "  make build               - Compilar el proyecto (sin tests)"
+	@echo "  make test                - Ejecutar todos los tests"
+	@echo "  make run                 - Arrancar la aplicación"
+	@echo "  make docker-build        - Construir imagen Docker"
+	@echo "  make docker-run          - Correr contenedor Docker (H2 Memoria)"
+	@echo "  make docker-run-postgres - Correr aplicación + PostgreSQL (Docker Compose)"
+	@echo "  make health              - Comprobar estado (requiere app corriendo)"
